@@ -1,8 +1,8 @@
-# vetis-rewrite
+# vetis-dns
 
-[![Crates.io downloads](https://img.shields.io/crates/d/vetis-rewrite)](https://crates.io/crates/vetis-rewrite) [![crates.io](https://img.shields.io/crates/v/vetis-rewrite?style=flat-square)](https://crates.io/crates/vetis-rewrite) [![Build Status](https://github.com/vetis-server/vetis-rewrite/actions/workflows/rust.yml/badge.svg?event=push)](https://github.com/vetis-server/vetis-rewrite/actions/workflows/rust.yml) ![Crates.io MSRV](https://img.shields.io/crates/msrv/vetis-rewrite) [![Documentation](https://docs.rs/vetis-rewrite/badge.svg)](https://docs.rs/vetis-rewrite/latest/vetis-rewrite) [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/vetis-server/vetis-rewrite/blob/main/LICENSE.md)  [![codecov](https://codecov.io/gh/vetis-server/vetis-rewrite/graph/badge.svg?token=T0HSBAPVSI)](https://codecov.io/gh/vetis-server/vetis-rewrite)
+[![Crates.io downloads](https://img.shields.io/crates/d/vetis-dns)](https://crates.io/crates/vetis-dns) [![crates.io](https://img.shields.io/crates/v/vetis-dns?style=flat-square)](https://crates.io/crates/vetis-dns) [![Build Status](https://github.com/vetis-server/vetis-dns/actions/workflows/rust.yml/badge.svg?event=push)](https://github.com/vetis-server/vetis-dns/actions/workflows/rust.yml) ![Crates.io MSRV](https://img.shields.io/crates/msrv/vetis-dns) [![Documentation](https://docs.rs/vetis-dns/badge.svg)](https://docs.rs/vetis-dns/latest/vetis-dns) [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/vetis-server/vetis-dns/blob/main/LICENSE.md)  [![codecov](https://codecov.io/gh/vetis-server/vetis-dns/graph/badge.svg?token=T0HSBAPVSI)](https://codecov.io/gh/vetis-server/vetis-dns)
 
-vetis-rewrite adds diffent rewrite types for your host path, choose the most appropriate one for your usecase!
+vetis-dns adds diffent rewrite types for your host path, choose the most appropriate one for your usecase!
 
 ## Features
 
@@ -14,7 +14,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-vetis-rewrite = "0.1.0"
+vetis-dns = "0.1.0"
 ```
 
 ## Configuration
