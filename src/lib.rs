@@ -6,7 +6,6 @@ use serde::{Deserialize, Serialize};
 use vetis::{
     VetisHook, VetisResult,
     errors::{ConfigError, VetisError},
-    hook::HookConfig,
     matcher::MatcherConfig,
 };
 
@@ -17,20 +16,19 @@ pub mod tokio;
 #[cfg(test)]
 mod tests;
 
-/// Builder for creating `DnsHookConfigBuilder` instances.
-#[derive(Deserialize)]
-pub struct DnsHookConfigBuilder {
-    matcher: Option<Box<dyn MatcherConfig>>,
+/// Builder for creating `HookConfigBuilder` instances.
+pub struct HookConfigBuilder {
+    matcher: Option<Box<dyn MatcherConfig + Send + Sync>>,
     target: String,
 }
 
-impl DnsHookConfigBuilder {
+impl HookConfigBuilder {
     /// Allow set a matcher
     ///
     /// # Returns
     ///
     /// * `Self` - The builder.
-    pub fn add_matcher<M>(mut self, matcher: M) -> Self
+    pub fn matcher<M>(mut self, matcher: M) -> Self
     where
         M: MatcherConfig + Send + Sync + 'static,
     {
@@ -48,12 +46,12 @@ impl DnsHookConfigBuilder {
         self
     }
 
-    /// Build the `DnsHookConfig` with the configured settings.
+    /// Build the `HookConfig` with the configured settings.
     ///
     /// # Returns
     ///
-    /// * `VetisResult<DnsHookConfig>` - The `DnsHookConfig` with the configured settings.
-    pub fn build(self) -> VetisResult<DnsHookConfig> {
+    /// * `VetisResult<HookConfig>` - The `HookConfig` with the configured settings.
+    pub fn build(self) -> VetisResult<HookConfig> {
         if self
             .target
             .is_empty()
@@ -63,7 +61,7 @@ impl DnsHookConfigBuilder {
             )));
         }
 
-        Ok(DnsHookConfig {
+        Ok(HookConfig {
             matcher: self
                 .matcher
                 .map_or(None, |val| Some(val)),
@@ -72,39 +70,37 @@ impl DnsHookConfigBuilder {
     }
 }
 
-/// Configuration for a proxy path.
+/// Configuration for a dns hook.
 #[derive(Clone, Serialize, Deserialize)]
-pub struct DnsHookConfig {
+pub struct HookConfig {
     matcher: Option<Box<dyn MatcherConfig>>,
     target: String,
-    // TODO: Add custom proxy rules
-    // TODO: Add support for custom headers
 }
 
 #[typetag::serde(name = "dns")]
-impl HookConfig for DnsHookConfig {
+impl vetis::hook::HookConfig for HookConfig {
     fn matcher(&self) -> Option<&Box<dyn MatcherConfig>> {
         self.matcher
             .as_ref()
     }
 
-    fn boxed_clone(&self) -> Box<dyn HookConfig> {
+    fn boxed_clone(&self) -> Box<dyn vetis::hook::HookConfig> {
         Box::new(self.clone())
     }
 
-    fn boxed_hook(&self) -> Box<dyn VetisHook> {
+    fn boxed_hook<'a>(&'a self) -> Box<dyn VetisHook> {
         Box::new(DnsHook::new(self.clone()))
     }
 }
 
-impl DnsHookConfig {
+impl HookConfig {
     /// Creates a new `DnsHookConfigBuilder` with default settings.
     ///
     /// # Returns
     ///
     /// * `DnsHookConfigBuilder` - The builder.
-    pub fn builder() -> DnsHookConfigBuilder {
-        DnsHookConfigBuilder { matcher: None, target: "http://localhost:8080".to_string() }
+    pub fn builder() -> HookConfigBuilder {
+        HookConfigBuilder { matcher: None, target: "http://localhost:8080".to_string() }
     }
 
     /// Returns the target of the proxy path.

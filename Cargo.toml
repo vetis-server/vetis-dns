@@ -28,7 +28,7 @@ runtime-tokio = [
 cel = "0.16.0"
 compact_str = "0.10.0"
 serde = { version = "1.0.228", features = ["derive", "rc"] }
-typetag = "0.2.21"
+typetag = "0.2.22"
 vetis = { path = "../vetis/vetis" }
 
 [dev-dependencies]

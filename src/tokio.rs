@@ -1,14 +1,14 @@
-use crate::DnsHookConfig;
+use crate::HookConfig;
 use cel::Context;
 use vetis::{
     Request, Response, VetisFutureResult,
-    hook::{Hook, HookConfig as _, HookPhase, HookPhases},
+    hook::{Hook, HookConfig as _, HookPhase},
     matcher::Matcher,
 };
 
 /// Proxy path
 pub struct DnsHook {
-    _config: DnsHookConfig,
+    _config: HookConfig,
     matcher: Option<Box<dyn Matcher>>,
 }
 
@@ -16,16 +16,16 @@ unsafe impl Send for DnsHook {}
 unsafe impl Sync for DnsHook {}
 
 impl DnsHook {
-    /// Create a new proxy path with provided configuration
+    /// Create a new dns hook with provided configuration
     ///
     /// # Arguments
     ///
-    /// * `config` - The proxy path configuration
+    /// * `config` - The dns hook configuration
     ///
     /// # Returns
     ///
-    /// * `ProxyHook` - The proxy path
-    pub fn new(config: DnsHookConfig) -> DnsHook {
+    /// * `DnsHook` - The dns hook
+    pub fn new(config: HookConfig) -> Self {
         let matcher = if let Some(matcher_config) = config.matcher() {
             Some(matcher_config.boxed_matcher())
         } else {
@@ -37,12 +37,16 @@ impl DnsHook {
 }
 
 impl Hook for DnsHook {
+    fn setup<'a>(&'a mut self) -> VetisFutureResult<'a, ()> {
+        Box::pin(async move { Ok(()) })
+    }
+
     fn has_matches(&self, context: &Context) -> bool {
         if let Some(matcher) = &self.matcher { matcher.is_match(context) } else { true }
     }
 
-    fn phases(&self) -> HookPhases {
-        HookPhases::new(HookPhase::Rewrite)
+    fn phase(&self) -> HookPhase {
+        HookPhase::Rewrite
     }
 
     fn matcher_mut(&mut self) -> Option<&mut Box<dyn Matcher>> {
